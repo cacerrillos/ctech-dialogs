@@ -1,0 +1,24 @@
+{
+  "name": "ctech-dialogs",
+  "authors": [
+    "Carlos Cerrillos <carlos@cerrillostech.com>"
+  ],
+  "description": "",
+  "main": "ctech-dialogs.html",
+  "moduleType": [],
+  "license": "Closed Source",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "../",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-elements": "PolymerElements/iron-elements#~1.0.4",
+    "neon-elements": "PolymerElements/neon-elements#~1.0.0",
+    "paper-elements": "PolymerElements/paper-elements#~1.0.5"
+  }
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../ctech-confirm-dialog.html">
+</head>
+<body>
+  <ctech-confirm-dialog-demo></ctech-confirm-dialog-demo>
+</body>
+</html>
+<dom-module id="ctech-confirm-dialog-demo">
+
+<template>
+  <style>
+  :host {
+    --ctech-tab-color: red;
+  }
+  </style>
+  <ctech-confirm-dialog id="demo">Swag</ctech-confirm-dialog>
+  <button on-click="_open">Open</button>
+  <button on-click="_close">Close</button>
+</template>
+
+<script>
+  Polymer({
+    is: 'ctech-confirm-dialog-demo',
+    properties: {
+      selected: {
+        type: Object
+      }
+    },
+    test: function(e) {
+      console.log(e);
+    },
+    _open: function() {
+      this.$.demo.open();
+    },
+    _close: function() {
+      this.$.demo.close();
+    },
+    ready: function() {
+      
+    }
+  });
+</script>
+</dom-module>
