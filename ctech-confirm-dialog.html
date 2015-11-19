@@ -100,11 +100,53 @@
         this.$.confirmButton.disabled = true;
       }
     },
-    open: function() {
-      this.$.mainDialog.open();
+    assignParentResizeable: function(parentResizeable) {
+      return this.$.mainDialog.assignParentResizeable(parentResizeable);
+    },
+    cancel: function() {
+      return this.$.mainDialog.cancel();
+    },
+    cancelAnimation: function() {
+      return this.$.mainDialog.cancelAnimation();
+    },
+    center: function() {
+      return this.$.mainDialog.center();
     },
     close: function() {
-      this.$.mainDialog.close();
+      return this.$.mainDialog.close();
+    },
+    constrain: function() {
+      return this.$.mainDialog.constrain();
+    },
+    fit: function() {
+      return this.$.mainDialog.fit();
+    },
+    getAnimationConfig: function(type) {
+      return this.$.mainDialog.getAnimationConfig(type);
+    },
+    notifyResize: function() {
+      return this.$.mainDialog.notifyResize();
+    },
+    open: function() {
+      return this.$.mainDialog.open();
+    },
+    playAnimation: function(type, cookie) {
+      return this.$.mainDialog.playAnimation(type, cookie);
+    },
+    refit: function() {
+      return this.$.mainDialog.refit();
+    },
+    resetFit: function() {
+      return this.$.mainDialog.resetFit();
+    },
+    resizerShouldNotify: function(element) {
+      return this.$.mainDialog.resizerShouldNotify(element);
+    },
+    stopResizeNotificationsFor: function(target) {
+      return this.$.mainDialog.stopResizeNotificationsFor(target);
+    },
+    toggle: function() {
+      return this.$.mainDialog.toggle();
     },
     ready: function(){
       this._invalidChanged();
