@@ -25,7 +25,7 @@
         padding-right: 20px;
       }
     </style>
-    <paper-dialog id="mainDialog" on-iron-overlay-closed="doDismiss" entry-animation="[[entryAnimation]]" exit-animation="[[exitAnimation]]">
+    <paper-dialog id="mainDialog" on-iron-overlay-closed="doDismiss" entry-animation="[[entryAnimation]]" exit-animation="[[exitAnimation]]" modal="{{modal}}">
       <div><paper-icon-button icon="icons:close" class="close-button" dialog-dismiss></paper-icon-button></div>
       <div class="dialog-content"><content></content></div>
       <div class="layout horizontal">
@@ -64,6 +64,11 @@
         type: String,
         value: "Accept"
       },
+      modal: {
+        type: Boolean,
+        value: false,
+        notfiy: true
+      },
       cofirmOnEnter: {
         type: Boolean,
         value: true
@@ -71,6 +76,9 @@
     },
     listeners: {
       'keydown': '_checkKeydown'
+    },
+    getDialog: function() {
+      return this.$.mainDialog;
     },
     doConfirm: function() {
       if(!this.invalid) {
