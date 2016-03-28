@@ -27,7 +27,7 @@
     </style>
     <paper-dialog id="mainDialog" on-iron-overlay-closed="doDismiss" entry-animation="[[entryAnimation]]" exit-animation="[[exitAnimation]]" modal="{{modal}}">
       <div><paper-icon-button icon="icons:close" class="close-button" dialog-dismiss></paper-icon-button></div>
-      <div class="dialog-content"><content></content></div>
+      <div class="dialog-content"><content id="content"></content></div>
       <div class="layout horizontal">
         <paper-button id="confirmButton" raised on-click="doConfirm" dialog-confirm>[[confirmText]]</paper-button>
         <paper-button raised dialog-dismiss>Cancel</paper-button>
@@ -72,16 +72,30 @@
       cofirmOnEnter: {
         type: Boolean,
         value: true
+      },
+      resetOnConfirm: {
+        type: String,
+        value: "false"
+      },
+      resetOnDismiss: {
+        type: String,
+        value: "true"
       }
     },
     listeners: {
-      'keydown': '_checkKeydown'
+      'keydown': '_checkKeydown',
+      'input': '_validateForm',
+      'ctech-select': '_validateForm',
+      'ctech-deselect': '_validateForm'
     },
     getDialog: function() {
       return this.$.mainDialog;
     },
     doConfirm: function() {
       if(!this.invalid) {
+        if(this.resetOnConfirm === "true") {
+          this.resetForm();
+        }
         this.fire('ctech-dialog-confirm');
         return true;
       }
@@ -89,6 +103,9 @@
     },
     doDismiss: function(e) {
       if(e.target == this.$.mainDialog) {
+        if(this.resetOnDismiss === "true") {
+          this.resetForm();
+        }
         this.fire('ctech-dialog-dismiss');
       }
     },
@@ -107,6 +124,35 @@
         this.$.confirmButton.style.color = "#a8a8a8";
         this.$.confirmButton.disabled = true;
       }
+    },
+    _validateForm: function(e) {
+      var valid = true;
+      var content_elements = this.getContentChildren("#content");
+      for(var x = 0; x < content_elements.length; x++) {
+        $(content_elements[x]).find(".ctech-input").each(function(i, v) { 
+          if(typeof v.value === 'undefined') {
+            valid = false;
+          } else {
+            valid = valid && v.value.length > 0;
+          }
+         });
+        $(content_elements[x]).find(".ctech-input-selector").each(function(i, v) { 
+          if(typeof v.selected === 'undefined') {
+            valid = false;
+          } else {
+            valid = valid && v.selected !== null;
+          }
+         });
+      }
+      this.invalid = !valid;
+    },
+    resetForm: function(e) {
+      var content_elements = this.getContentChildren ("#content");
+      for(var x = 0; x < content_elements.length; x++) {
+        $(content_elements[x]).find(".ctech-input").each(function(i, v) { v.value = ""; });
+        $(content_elements[x]).find(".ctech-input-selector").each(function(i, v) { v.select(); });
+      }
+      this.invalid = true;
     },
     assignParentResizeable: function(parentResizeable) {
       return this.$.mainDialog.assignParentResizeable(parentResizeable);
@@ -158,6 +204,7 @@
     },
     ready: function(){
       this._invalidChanged();
+      this._validateForm();
     }
   });
   </script>
