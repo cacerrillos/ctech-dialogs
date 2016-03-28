@@ -143,6 +143,13 @@
             valid = valid && v.selected !== null;
           }
          });
+        $(content_elements[x]).find(".ctech-input-date").each(function(i, v) { 
+          if(typeof v.date === 'undefined') {
+            valid = false;
+          } else {
+            valid = valid && v.date !== null;
+          }
+         });
       }
       this.invalid = !valid;
     },
@@ -151,6 +158,7 @@
       for(var x = 0; x < content_elements.length; x++) {
         $(content_elements[x]).find(".ctech-input").each(function(i, v) { v.value = ""; });
         $(content_elements[x]).find(".ctech-input-selector").each(function(i, v) { v.select(); });
+        $(content_elements[x]).find(".ctech-input-date").each(function(i, v) { v.date = new Date(); });
       }
       this.invalid = true;
     },
