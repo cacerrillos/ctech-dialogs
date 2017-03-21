@@ -125,47 +125,85 @@
         this.$.confirmButton.disabled = true;
       }
     },
-    _validateForm: function(e) {
-      var valid = true;
-      var content_elements = this.getContentChildren("#content");
-      for(var x = 0; x < content_elements.length; x++) {
-        $(content_elements[x]).find("paper-dialog-scrollable").each( function(i, v) {
-          v.dialogElement = this.$.mainDialog;
-        });
-        $(content_elements[x]).find(".ctech-input").each(function(i, v) { 
-          if(typeof v.value === 'undefined') {
-            valid = false;
-          } else {
-            valid = valid && v.value.length > 0;
-          }
-         });
-        $(content_elements[x]).find(".ctech-input-selector").each(function(i, v) { 
-          if(typeof v.selected === 'undefined') {
-            valid = false;
-          } else {
-            valid = valid && v.selected !== null;
-          }
-         });
-        /*
-        $(content_elements[x]).find(".ctech-input-date").each(function(i, v) { 
-          if(typeof v.date === 'undefined') {
-            valid = false;
-          } else {
-            valid = valid && v.date !== null;
-          }
-         });
-        */
+    _findScrollableDialog: function(e) {
+      console.log(e);
+      var children = e.children;
+
+      if(e.tageName === "PAPER-DIALOG-SCROLLABLE") {
+        e.dialogElement = this.$.mainDialog;
       }
-      this.invalid = !valid;
+
+      for(var x = 0; x < children.length; x++) {
+        this._findScrollableDialog(children[x]);
+      }
+    },
+    _validateFormRecursive: function(e) {
+      var children = e.children;
+
+      if(e.classList.contains('ctech-input')) {
+        if(!(e.value && e.value.length > 0)) {
+          return false;
+        }
+      }
+      if(e.classList.contains('ctech-input-selector')) {
+        if(typeof v.selected === 'undefined') {
+          return false;
+        } else {
+          if(v.selected === null)
+            return false;
+        }
+      }
+      if(e.classList.contains('ctech-input-date')) {
+        // if(typeof v.date === 'undefined') {
+        //   valid = false;
+        // } else {
+        //   valid = valid && v.date !== null;
+        // }
+      }
+
+      for(var x = 0; x < children.length; x++) {
+        if(!this._validateFormRecursive(children[x])) {
+          return false;
+        }
+      }
+
+      return true;
+    },
+    _validateForm: function(e) {
+      var content_elements = this.getContentChildren("#content");
+      
+      for(var x = 0; x < content_elements.length; x++) {
+        if(!this._validateFormRecursive(content_elements[x])) {
+          this.invalid = true;
+          return;
+        }
+      }
+
+      this.invalid = false;
+    },
+    _resetFormRecursive: function(e) {
+      var children = e.children;
+
+      if(e.classList.contains('ctech-input')) {
+        e.value = '';
+      }
+      if(e.classList.contains('ctech-input-selector')) {
+        e.select();
+      }
+      if(e.classList.contains('ctech-input-date')) {
+        // e.date = new Date();
+      }
+
+      for(var x = 0; x < children.length; x++) {
+        this._resetFormRecursive(children[x]);
+      }
     },
     resetForm: function(e) {
-      var content_elements = this.getContentChildren ("#content");
+      var content_elements = this.getContentChildren("#content");
+
       for(var x = 0; x < content_elements.length; x++) {
-        $(content_elements[x]).find(".ctech-input").each(function(i, v) { v.value = ""; });
-        $(content_elements[x]).find(".ctech-input-selector").each(function(i, v) { v.select(); });
-        //$(content_elements[x]).find(".ctech-input-date").each(function(i, v) { v.date = new Date(); });
+        this._resetFormRecursive(content_elements[x]);
       }
-      this.invalid = true;
     },
     assignParentResizeable: function(parentResizeable) {
       return this.$.mainDialog.assignParentResizeable(parentResizeable);
@@ -195,6 +233,7 @@
       return this.$.mainDialog.notifyResize();
     },
     open: function() {
+      this._validateForm();
       return this.$.mainDialog.open();
     },
     playAnimation: function(type, cookie) {
@@ -216,6 +255,10 @@
       return this.$.mainDialog.toggle();
     },
     ready: function(){
+      var content_elements = this.getContentChildren ("#content");
+      for(var x = 0; x < content_elements.length; x++) {
+        this._findScrollableDialog(content_elements[x]);
+      }
       this._invalidChanged();
       this._validateForm();
     }
