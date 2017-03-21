@@ -129,6 +129,9 @@
       var valid = true;
       var content_elements = this.getContentChildren("#content");
       for(var x = 0; x < content_elements.length; x++) {
+        $(content_elements[x]).find("paper-dialog-scrollable").each( function(i, v) {
+          v.dialogElement = this.$.mainDialog;
+        });
         $(content_elements[x]).find(".ctech-input").each(function(i, v) { 
           if(typeof v.value === 'undefined') {
             valid = false;
