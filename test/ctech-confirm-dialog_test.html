@@ -145,7 +145,7 @@
 
           server.respond();
 
-          timePasses(1).then(function() {
+          request.completes.then(function() {
             try {
               expect(spinner.active).to.be.false;
               expect(spinner.hidden).to.be.true;
@@ -162,14 +162,18 @@
 
           server.respond();
 
-          timePasses(1).then(function() {
-            try {
-              expect(spinner.active).to.be.false;
-              expect(spinner.hidden).to.be.true;
-              done();
-            } catch(e) {
-              done(e);
+          request.completes.then(
+            function() {
+              done(new Error("Expected to error, check test response"));
             }
+          ).catch( function(ex) {
+            try {
+                expect(spinner.active).to.be.false;
+                expect(spinner.hidden).to.be.true;
+                done();
+              } catch(e) {
+                done(e);
+              }
           });
         });
 
@@ -182,7 +186,7 @@
 
           server.respond();
 
-          timePasses(1).then(function() {
+          request.completes.then(function() {
             done();
           })
         });
@@ -194,7 +198,7 @@
 
           server.respond();
 
-          timePasses(1).then(function() {
+          request.completes.then(function() {
             try {
               expect(withAjax._onResponse).to.have.been.calledOnce;
               done();
@@ -212,7 +216,11 @@
 
           server.respond();
 
-          timePasses(1).then(function() {
+          request.completes.then(
+            function() {
+              done(new Error("Expected to error, check test response"));
+            }
+          ).catch(function() {
             try {
               expect(withAjax._onError).to.have.been.calledOnce;
               done();
