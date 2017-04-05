@@ -343,6 +343,9 @@ Example:
       generateRequest: function() {
         return this.$.ajax.generateRequest();
       },
+      toRequestOptions: function() {
+        return this.$.ajax.toRequestOptions();
+      },
       _request: function(e) {
         this.fire('iron-ajax-request', e.detail);
       },
