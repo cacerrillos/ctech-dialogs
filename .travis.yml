@@ -18,5 +18,7 @@ addons:
     packages:
     - google-chrome-stable
 script:
-- xvfb-run wct --skip-plugin sauce
-- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then wct -s 'default' --skip-plugin local; fi
+- xvfb-run wct test/index.html --skip-plugin sauce
+- xvfb-run wct test/shadow.html --skip-plugin sauce
+- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then wct test/index.html -s 'default' --skip-plugin local; fi
+- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then wct test/shadow.html -s 'default' --skip-plugin local; fi
