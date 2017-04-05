@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <dom-module id="ctech-confirm-dialog">
   <link rel="import" href="../polymer/polymer.html">
+  <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
   <link rel="import" href="../paper-dialog/paper-dialog.html">
   <link rel="import" href="../paper-icon-button/paper-icon-button.html">
   <link rel="import" href="../iron-icons/iron-icons.html">
@@ -9,7 +10,7 @@
   <link rel="import" href="../neon-animation/animations/fade-out-animation.html">
   <link rel="import" href="../paper-spinner/paper-spinner.html">
   <template>
-    <style>
+    <style include="iron-flex iron-flex-alignment">
       paper-dialog {
         background-color: white;
         min-width: 300px;
@@ -25,17 +26,26 @@
         padding-left: 20px;
         padding-right: 20px;
       }
+      paper-spinner {
+        width: 20px;
+        height: 20px;
+      }
+      paper-button:last-child {
+        margin-right: 0;
+      }
     </style>
     <paper-dialog id="mainDialog" on-iron-overlay-closed="doDismiss" entry-animation="[[entryAnimation]]" exit-animation="[[exitAnimation]]" modal="{{modal}}">
       <div><paper-icon-button icon="icons:close" class="close-button" dialog-dismiss></paper-icon-button></div>
       <div class="dialog-content"><content id="content"></content></div>
-      <div class="layout horizontal">
-        <paper-button id="confirmButton" raised on-click="doConfirm" dialog-confirm>
-          <div id="confirmTextDiv">[[confirmText]]</div>
+      <div class="layout horizontal confirm-buttons">
+        <div class="flex"></div>
+        <paper-button id="confirmButton" raised on-click="preConfirm" dialog-confirm-d>
+          <div id="confirmTextDiv" class="spinner-text">[[confirmText]]</div>
           <paper-spinner id="spinner" hidden></paper-spinner>
         </paper-button>
-        <paper-button raised dialog-dismiss>Cancel</paper-button>
-        <div class="flex"></div>
+        <paper-button raised dialog-dismiss-d on-click="doCancel">
+          <div>Cancel</div>
+        </paper-button>
       </div>
     </paper-dialog>
   </template>
@@ -91,6 +101,10 @@
       },
       _ironAjax: {
         type: Object
+      },
+      _ironRequest: {
+        type: Object,
+        value: null
       }
     },
     listeners: {
@@ -107,32 +121,53 @@
     },
     _onResponse: function(e) {
       this._enableSpinner(false);
+      this.postConfirm();
     },
     _onError: function(e) {
       this._enableSpinner(false);
     },
     _enableSpinner: function(e) {
       if(e) {
+        this.$.confirmTextDiv.hidden = true;
         this.$.spinner.active = true;
         this.$.spinner.hidden = false;
+        this.$.confirmButton.disabled = true;
       } else {
+        this.$.confirmTextDiv.hidden = false;
         this.$.spinner.active = false;
         this.$.spinner.hidden = true;
+        this.$.confirmButton.disabled = false;
       }
+      this._invalidChanged(e);
     },
 
     getDialog: function() {
       return this.$.mainDialog;
     },
-    doConfirm: function() {
+    preConfirm: function() {
       if(!this.invalid) {
-        if(this.resetOnConfirm === "true") {
-          this.resetForm();
+        if(this.hasAjax) {
+          this._ironRequest = this._ironAjax.generateRequest();
+        } else {
+          this.postConfirm();
         }
-        this.fire('ctech-dialog-confirm');
-        return true;
       }
-      return false;
+    },
+    postConfirm: function() {
+      if(this.resetOnConfirm === "true") {
+        this.resetForm();
+      }
+      this.fire('ctech-dialog-confirm');
+      this.$.mainDialog.close();
+    },
+    doCancel: function(e) {
+      if(this.hasAjax) {
+        if(this._ironRequest) {
+          this._ironRequest.abort();
+          return;
+        }
+      }
+      this.$.mainDialog.close();
     },
     doDismiss: function(e) {
       if(e.target == this.$.mainDialog) {
@@ -144,7 +179,7 @@
     },
     _checkKeydown: function(e) {
       if(e.keyCode == 13 && this.cofirmOnEnter) {
-        this.doConfirm();
+        this.preConfirm();
       }
     },
     _invalidChanged: function(e) {

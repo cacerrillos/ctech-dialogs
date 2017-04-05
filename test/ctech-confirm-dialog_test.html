@@ -27,7 +27,7 @@
     </test-fixture>
     <test-fixture id="withAjax">
       <template>
-        <ctech-confirm-dialog>
+        <ctech-confirm-dialog id="withAjaxDialog">
           <ctech-ajax
             url="/data.json"
             handle-as="json"
@@ -131,6 +131,7 @@
         test('spinner disabled before request', function() {
           expect(spinner.active).to.be.false;
           expect(spinner.hidden).to.be.true;
+          expect(withAjax.$$('#confirmButton').disabled).to.be.false;
         });
 
         test('spinner enabled during request', function() {
@@ -138,6 +139,7 @@
 
           expect(spinner.active).to.be.true;
           expect(spinner.hidden).to.be.false;
+          expect(withAjax.$$('#confirmButton').disabled).to.be.true;
         });
 
         test('spinner disabled after response', function(done) {
@@ -149,6 +151,7 @@
             try {
               expect(spinner.active).to.be.false;
               expect(spinner.hidden).to.be.true;
+              expect(withAjax.$$('#confirmButton').disabled).to.be.false;
               done();
             } catch(e) {
               done(e);
@@ -170,6 +173,7 @@
             try {
                 expect(spinner.active).to.be.false;
                 expect(spinner.hidden).to.be.true;
+                expect(withAjax.$$('#confirmButton').disabled).to.be.false;
                 done();
               } catch(e) {
                 done(e);
