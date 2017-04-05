@@ -7,6 +7,7 @@
   <link rel="import" href="../paper-button/paper-button.html">
   <link rel="import" href="../neon-animation/animations/scale-up-animation.html">
   <link rel="import" href="../neon-animation/animations/fade-out-animation.html">
+  <link rel="import" href="../paper-spinner/paper-spinner.html">
   <template>
     <style>
       paper-dialog {
@@ -29,7 +30,10 @@
       <div><paper-icon-button icon="icons:close" class="close-button" dialog-dismiss></paper-icon-button></div>
       <div class="dialog-content"><content id="content"></content></div>
       <div class="layout horizontal">
-        <paper-button id="confirmButton" raised on-click="doConfirm" dialog-confirm>[[confirmText]]</paper-button>
+        <paper-button id="confirmButton" raised on-click="doConfirm" dialog-confirm>
+          <div id="confirmTextDiv">[[confirmText]]</div>
+          <paper-spinner id="spinner" active></paper-spinner>
+        </paper-button>
         <paper-button raised dialog-dismiss>Cancel</paper-button>
         <div class="flex"></div>
       </div>
@@ -80,13 +84,23 @@
       resetOnDismiss: {
         type: String,
         value: "true"
+      },
+      hasAjax: {
+        type: Boolean,
+        value: false
+      },
+      _ironAjax: {
+        type: Object
       }
     },
     listeners: {
       'keydown': '_checkKeydown',
       'input': '_validateForm',
       'ctech-select': '_validateForm',
-      'ctech-deselect': '_validateForm'
+      'ctech-deselect': '_validateForm',
+      'request': '_onRequest',
+      'response': '_onResponse',
+      'error': '_onError'
     },
     getDialog: function() {
       return this.$.mainDialog;
@@ -125,15 +139,18 @@
         this.$.confirmButton.disabled = true;
       }
     },
-    _findScrollableDialog: function(e) {
+    _findChildElements: function(e) {
       var children = e.children;
 
-      if(e.tageName === "PAPER-DIALOG-SCROLLABLE") {
+      if(e.tagName === "PAPER-DIALOG-SCROLLABLE") {
         e.dialogElement = this.$.mainDialog;
+      } else if(e.tagName === "IRON-AJAX") {
+        this._ironAjax = e;
+        this.hasAjax = true;
       }
 
       for(var x = 0; x < children.length; x++) {
-        this._findScrollableDialog(children[x]);
+        this._findChildElements(children[x]);
       }
     },
     _validateFormRecursive: function(e) {
@@ -256,7 +273,7 @@
     ready: function(){
       var content_elements = this.getContentChildren ("#content");
       for(var x = 0; x < content_elements.length; x++) {
-        this._findScrollableDialog(content_elements[x]);
+        this._findChildElements(content_elements[x]);
       }
       this._invalidChanged();
       this._validateForm();
