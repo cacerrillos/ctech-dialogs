@@ -129,6 +129,8 @@
       }
     },
     _invalidChanged: function(e) {
+      if(this.$.confirmButton === undefined)
+        return;
       if(!e) {
         this.$.confirmButton.style.backgroundColor = this.validColor;
         this.$.confirmButton.style.color = "white";
