@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>as-df test</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../ctech-confirm-dialog.html">
+    <link rel="import" href="../../iron-ajax/iron-ajax.html">
+    <link rel="import" href="../../paper-dialog-scrollable/paper-dialog-scrollable.html">
+  </head>
+  <body>
+    <test-fixture id="basic">
+      <template>
+        <ctech-confirm-dialog>
+          <div>
+            <paper-dialog-scrollable id="dialogScrollable">
+              Lorem ipsum...
+            </paper-dialog-scrollable>
+          </div>
+        </ctech-confirm-dialog>
+      </template>
+    </test-fixture>
+    <test-fixture id="withAjax">
+      <template>
+        <ctech-confirm-dialog>
+          <iron-ajax
+             url=""
+             handle-as="json"
+             on-response="handleResponse"></iron-ajax>
+        </ctech-confirm-dialog>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('ctech-confirm-dialog', function() {
+        var basic;
+        var withAjax;
+        
+        setup(function() {
+          basic = fixture('basic');
+          withAjax = fixture('withAjax');
+        });
+
+        test('instantiating the element works', function() {
+          assert.equal(basic.is, 'ctech-confirm-dialog');
+        });
+
+        test('hasAjax works', function() {
+          expect(basic.hasAjax).to.be.false;
+          expect(withAjax.hasAjax).to.be.true;
+        });
+
+        test('setting paper-dialog-scrollable dialogElement works when nested', function() {
+          var dialogScrollable = document.querySelector('#dialogScrollable');
+          
+          expect(dialogScrollable).to.be.ok;
+          expect(dialogScrollable.dialogElement).to.be.ok;
+          expect(dialogScrollable.dialogElement).to.be.equal(basic.getDialog());
+        });
+
+      });
+    </script>
+  </body>
+</html>
