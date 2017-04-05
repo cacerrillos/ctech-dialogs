@@ -29,30 +29,34 @@
       <template>
         <ctech-confirm-dialog>
           <iron-ajax
-             url=""
-             handle-as="json"
-             on-response="handleResponse"></iron-ajax>
+            url="/data.json"
+            handle-as="json"
+            bubbles></iron-ajax>
         </ctech-confirm-dialog>
       </template>
     </test-fixture>
 
     <script>
+      function timePasses(ms) {
+        return new Promise(function(done) {
+          window.setTimeout(function() {
+            done();
+          }, ms);
+        });
+      }
       suite('ctech-confirm-dialog', function() {
         var basic;
-        var withAjax;
-        
+
         setup(function() {
           basic = fixture('basic');
-          withAjax = fixture('withAjax');
         });
+
 
         test('instantiating the element works', function() {
-          assert.equal(basic.is, 'ctech-confirm-dialog');
-        });
-
-        test('hasAjax works', function() {
-          expect(basic.hasAjax).to.be.false;
-          expect(withAjax.hasAjax).to.be.true;
+          var bleh = sinon.spy(basic, 'ready');
+          
+          expect(basic.is).to.be.equal('ctech-confirm-dialog');
+          
         });
 
         test('setting paper-dialog-scrollable dialogElement works when nested', function() {
@@ -63,6 +67,160 @@
           expect(dialogScrollable.dialogElement).to.be.equal(basic.getDialog());
         });
 
+        test('text input events are caught', function() {
+          sinon.spy(basic, '_validateForm');
+          
+          expect(basic._validateForm).to.have.not.been.called;
+          //this.
+        })
+      });
+
+      suite('ctech-confirm-dialog and iron-ajax', function() {
+        var basic;
+        var withAjax;
+        var request;
+        var server;
+        var spinner;
+        var ironAjax;
+        var responseHeaders = {
+          json: {'Content-Type': 'application/json'}
+        };
+
+        setup(function() {
+          basic = fixture('basic');
+          withAjax = fixture('withAjax');
+
+          spinner = withAjax.$$('#spinner');
+          ironAjax = document.querySelector('iron-ajax');
+
+          server = sinon.fakeServer.create();
+          server.respondWith(
+            'GET',
+            '/data.json',
+            [
+              200,
+              responseHeaders.json,
+              '{ "status": true }'
+            ]
+          );
+
+          server.respondWith(
+            'GET',
+            '/error.json',
+            [
+              400,
+              responseHeaders.json,
+              '{ "status": false }'
+            ]
+          );
+
+          sinon.spy(withAjax, '_onRequest');
+          sinon.spy(withAjax, '_onResponse');
+          sinon.spy(withAjax, '_onError');
+        });
+
+        teardown(function() {
+          server.restore();
+        });
+
+        test('hasAjax works', function() {
+          expect(basic.hasAjax).to.be.false;
+          expect(withAjax.hasAjax).to.be.true;
+        });
+
+        test('spinner disabled before request', function() {
+          expect(spinner.active).to.be.false;
+          expect(spinner.hidden).to.be.true;
+        });
+
+        test('spinner enabled during request', function() {
+          request = ironAjax.generateRequest();
+
+          expect(spinner.active).to.be.true;
+          expect(spinner.hidden).to.be.false;
+        });
+
+        test('spinner disabled after response', function(done) {
+          request = ironAjax.generateRequest();
+
+          server.respond();
+
+          timePasses(1).then(function() {
+            try {
+              expect(spinner.active).to.be.false;
+              expect(spinner.hidden).to.be.true;
+              done();
+            } catch(e) {
+              done(e);
+            }
+          });
+
+        });
+        test('spinner disabled after error', function(done) {
+          ironAjax.url = '/error.json';
+          request = ironAjax.generateRequest();
+
+          server.respond();
+
+          timePasses(1).then(function() {
+            try {
+              expect(spinner.active).to.be.false;
+              expect(spinner.hidden).to.be.true;
+              done();
+            } catch(e) {
+              done(e);
+            }
+          });
+        });
+
+        test('iron-ajax-request is caught', function(done) {
+          expect(withAjax._onRequest).to.have.not.been.called;
+
+          request = ironAjax.generateRequest();
+          
+          expect(withAjax._onRequest).to.have.been.called;
+
+          server.respond();
+
+          timePasses(1).then(function() {
+            done();
+          })
+        });
+
+        test('iron-ajax-response is caught', function(done) {
+          request = ironAjax.generateRequest();
+          
+          expect(withAjax._onResponse).to.have.not.been.called;
+
+          server.respond();
+
+          timePasses(1).then(function() {
+            try {
+              expect(withAjax._onResponse).to.have.been.calledOnce;
+              done();
+            } catch(e) {
+              done(e);
+            }
+          });
+        });
+
+        test('iron-ajax-error is caught', function(done) {
+          ironAjax.url = "/error.json";
+          request = ironAjax.generateRequest();
+          
+          expect(withAjax._onError).to.have.not.been.called;
+
+          server.respond();
+
+          timePasses(1).then(function() {
+            try {
+              expect(withAjax._onError).to.have.been.calledOnce;
+              done();
+            } catch(e) {
+              done(e);
+            }
+          });
+        });
       });
     </script>
   </body>

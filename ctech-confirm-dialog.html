@@ -32,7 +32,7 @@
       <div class="layout horizontal">
         <paper-button id="confirmButton" raised on-click="doConfirm" dialog-confirm>
           <div id="confirmTextDiv">[[confirmText]]</div>
-          <paper-spinner id="spinner" active></paper-spinner>
+          <paper-spinner id="spinner" hidden></paper-spinner>
         </paper-button>
         <paper-button raised dialog-dismiss>Cancel</paper-button>
         <div class="flex"></div>
@@ -98,10 +98,29 @@
       'input': '_validateForm',
       'ctech-select': '_validateForm',
       'ctech-deselect': '_validateForm',
-      'request': '_onRequest',
-      'response': '_onResponse',
-      'error': '_onError'
+      'iron-ajax-request': '_onRequest',
+      'iron-ajax-response': '_onResponse',
+      'iron-ajax-error': '_onError'
     },
+    _onRequest: function(e) {
+      this._enableSpinner(true);
+    },
+    _onResponse: function(e) {
+      this._enableSpinner(false);
+    },
+    _onError: function(e) {
+      this._enableSpinner(false);
+    },
+    _enableSpinner: function(e) {
+      if(e) {
+        this.$.spinner.active = true;
+        this.$.spinner.hidden = false;
+      } else {
+        this.$.spinner.active = false;
+        this.$.spinner.hidden = true;
+      }
+    },
+
     getDialog: function() {
       return this.$.mainDialog;
     },
