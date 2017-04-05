@@ -4,7 +4,7 @@ sudo: required
 before_script:
 - npm install -g bower polylint web-component-tester
 - bower install
-- polylint
+- polylint -v ctech-ajax.html ctech-confirm-dialog.html
 env:
   global:
   - secure: YCClvF5U0wple7MdJXCrN1V9KjTt7qP0uTqHbrjGGOk2XEpfxu4CDr8Uo93ZVSTcPV9cdiZSONCLuUtp43jVW7hbd2gXSNlSEzMRl1NWpIj5Zvk6PpH8KXgSmxl1eMLeBuxeb2vcCCV9ik3vS8ybgPpkbS5BVIyeMzMX/GxpV5qYSHnlzgxF8PeFQ4lYK7eYdzFmYNq/XYFkEptvzIZg1anPLdvxqJtUbv/w+kp+zt40D6QdOLHH4LAqMBpmfHoYU2GcM47CNztiozrnDBo0RwiNQD88fAMWzihuZvOYk/zskw2mlSRczyWXpueylkLwzu108sNjcM7d0y5C8sRvcMgDfm+K2YjzvtQD5R1xJV/EPeXP79Vlj2+Pmx9g0gVmTD0ak8RIeIws0G/ve9xseQSVJjcoO3h0gb5rSXFF6QRH511ud9yciyFvYh1A3BJVvFB2Ac9GpGBdW+H/S9UY7ROtDTM/SPm+AhiIgnAka1TbrBM1I2+WWtG90IJnE7p84yLlvxxXSBfy6ifSss3qLylyrhNL+m0C1gU/9n+zGc2K6/KkCTmVAsOXegTbhoDME/3qk+QMg91dnmSB2jNilf0OxW+MUWvEmtE5uCjRz+OqrsAaDfAcvr5nSfxeEKN5/sBXcckR6jgIxh03GlZorga0xT8T5m+chXbRrZiTmLE=
