@@ -31,7 +31,7 @@
           <iron-ajax
             url="/data.json"
             handle-as="json"
-            bubbles></iron-ajax>
+            ></iron-ajax>
         </ctech-confirm-dialog>
       </template>
     </test-fixture>
@@ -188,7 +188,9 @@
 
           request.completes.then(function() {
             done();
-          })
+          }).catch(function(e) {
+            done(e);
+          });
         });
 
         test('iron-ajax-response is caught', function(done) {
@@ -205,6 +207,8 @@
             } catch(e) {
               done(e);
             }
+          }).catch(function(e) {
+            done(e);
           });
         });
 
