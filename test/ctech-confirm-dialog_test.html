@@ -10,7 +10,7 @@
     <script src="../../web-component-tester/browser.js"></script>
 
     <link rel="import" href="../ctech-confirm-dialog.html">
-    <link rel="import" href="../../iron-ajax/iron-ajax.html">
+    <link rel="import" href="../ctech-ajax.html">
     <link rel="import" href="../../paper-dialog-scrollable/paper-dialog-scrollable.html">
   </head>
   <body>
@@ -28,10 +28,10 @@
     <test-fixture id="withAjax">
       <template>
         <ctech-confirm-dialog>
-          <iron-ajax
+          <ctech-ajax
             url="/data.json"
             handle-as="json"
-            ></iron-ajax>
+            ></ctech-ajax>
         </ctech-confirm-dialog>
       </template>
     </test-fixture>
@@ -75,7 +75,7 @@
         })
       });
 
-      suite('ctech-confirm-dialog and iron-ajax', function() {
+      suite('ctech-confirm-dialog and ctech-ajax', function() {
         var basic;
         var withAjax;
         var request;
@@ -91,7 +91,7 @@
           withAjax = fixture('withAjax');
 
           spinner = withAjax.$$('#spinner');
-          ironAjax = document.querySelector('iron-ajax');
+          ironAjax = document.querySelector('ctech-ajax');
 
           server = sinon.fakeServer.create();
           server.respondWith(
