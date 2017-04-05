@@ -2,19 +2,21 @@ language: node_js
 dist: trusty
 sudo: required
 before_script:
-  - npm install -g bower polylint web-component-tester
-  - bower install
-  - polylint
+- npm install -g bower polylint web-component-tester
+- bower install
+- polylint
 env:
   global:
+  - secure: YCClvF5U0wple7MdJXCrN1V9KjTt7qP0uTqHbrjGGOk2XEpfxu4CDr8Uo93ZVSTcPV9cdiZSONCLuUtp43jVW7hbd2gXSNlSEzMRl1NWpIj5Zvk6PpH8KXgSmxl1eMLeBuxeb2vcCCV9ik3vS8ybgPpkbS5BVIyeMzMX/GxpV5qYSHnlzgxF8PeFQ4lYK7eYdzFmYNq/XYFkEptvzIZg1anPLdvxqJtUbv/w+kp+zt40D6QdOLHH4LAqMBpmfHoYU2GcM47CNztiozrnDBo0RwiNQD88fAMWzihuZvOYk/zskw2mlSRczyWXpueylkLwzu108sNjcM7d0y5C8sRvcMgDfm+K2YjzvtQD5R1xJV/EPeXP79Vlj2+Pmx9g0gVmTD0ak8RIeIws0G/ve9xseQSVJjcoO3h0gb5rSXFF6QRH511ud9yciyFvYh1A3BJVvFB2Ac9GpGBdW+H/S9UY7ROtDTM/SPm+AhiIgnAka1TbrBM1I2+WWtG90IJnE7p84yLlvxxXSBfy6ifSss3qLylyrhNL+m0C1gU/9n+zGc2K6/KkCTmVAsOXegTbhoDME/3qk+QMg91dnmSB2jNilf0OxW+MUWvEmtE5uCjRz+OqrsAaDfAcvr5nSfxeEKN5/sBXcckR6jgIxh03GlZorga0xT8T5m+chXbRrZiTmLE=
+  - secure: DoRkzT2C0QoYWph8twx7u9da10cd0m2fEHG7KVAVunDXSC4HkD5bchpmpmnxR9wpGjOdlYEgeHr80dNoiy2eQK2VBhkMp3ZuZdme8Pd5L75iJyGkqGqJjdEggM2cLVn/dYXWLyBBGz6kmb7IHC2Xij8RGsnvxxkEdO/VggM/H87juxy1WPF6xXGty0QcDE0KNFVu0WzlW0iTOahhJHp3xztOwFjjVCXkgD29F89T/TAQMVe+vLA7I1C54zlBAuHOxceeIaW2R81D7Q07GnYLzP6EGik3T1GKt618WDU1F27DJizJQyZC1+jyy2NLUoQFRsTRVQZgG212jX9fnd3/FM7HTckRRCi3tndP08O84cScpYK4/oocP1etZbTmF+X6EJumTCjodmD9jl0ZMb+5E3Wzxm2MYMi6WYLOkUeE9Fq6rRcUDO3iitU4/WGZ4INrI2yJlGcw0sGPwQLxlVc/8vBQoN8CXS4Dl1beF0nthjeXtF0dHK/52YkLOP2DVS8EOhHZd0m8ceNmboERJc+TJhma0ZxBjzeTJ+W6TMrDDog2L8O179rFpIK8VFoyEbV2IYEMmHFVU1nQaOpP/ySq6E7eZz4QEchVJsf97BqSz1D1iiFLw6vQvG4jYy7ZHem5oEqxC0eu89M9P+Vcyit0IggXhutoPBbgxrye6W0Dozk=
 node_js: '6'
 addons:
   firefox: latest
   apt:
     sources:
-      - google-chrome
+    - google-chrome
     packages:
-      - google-chrome-stable
+    - google-chrome-stable
 script:
-  - xvfb-run wct
-  - 'if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then wct -s ''default''; fi'
+- xvfb-run wct --skip-plugin sauce
+- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then wct -s 'default' --skip-plugin local; fi
