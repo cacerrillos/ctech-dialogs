@@ -1,3 +1,3 @@
-## <ctech-dialogs> [![Build Status](https://travis-ci.org/cacerrillos/ctech-dialogs.svg?branch=master)](https://travis-ci.org/cacerrillos/ctech-dialogs)
+## &lt;ctech-dialogs&gt; [![Build Status](https://travis-ci.org/cacerrillos/ctech-dialogs.svg?branch=master)](https://travis-ci.org/cacerrillos/ctech-dialogs)
 
 ...
