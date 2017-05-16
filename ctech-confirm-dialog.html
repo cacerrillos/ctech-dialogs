@@ -35,7 +35,7 @@
       }
     </style>
     <paper-dialog id="mainDialog" on-iron-overlay-closed="doDismiss" entry-animation="[[entryAnimation]]" exit-animation="[[exitAnimation]]" modal="{{modal}}">
-      <div><paper-icon-button icon="icons:close" class="close-button" dialog-dismiss></paper-icon-button></div>
+      <div><paper-icon-button icon="icons:close" class="close-button" on-click="doCancel"></paper-icon-button></div>
       <div class="dialog-content"><content id="content"></content></div>
       <div class="layout horizontal confirm-buttons">
         <div class="flex"></div>
@@ -167,7 +167,7 @@
           return;
         }
       }
-      this.$.mainDialog.close();
+      this.$.mainDialog.cancel();
     },
     doDismiss: function(e) {
       if(e.target == this.$.mainDialog) {
