@@ -1,19 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="text/javascript">
-    (function() {
-      if('registerElement' in document
-          && 'import' in document.createElement('link')
-          && 'content' in document.createElement('template')) {
-
-      } else {
-        var s = document.createElement('script');
-        s.src = 'bower_components/webcomponentsjs/webcomponents-lite.min.js';
-        document.body.appendChild(s);
-      }
-    })();
-  </script>
+  <script type="text/javascript" src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../ctech-confirm-dialog.html">
   <link rel="import" href="../ctech-ajax.html">
   <link rel="import" href="../../paper-input/paper-input.html">
