@@ -174,7 +174,7 @@
         if(this.resetOnDismiss === "true") {
           this.resetForm();
         }
-        this.fire('ctech-dialog-dismiss');
+        this.fire('ctech-dialog-dismiss', e.detail);
       }
     },
     _checkKeydown: function(e) {
