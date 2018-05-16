@@ -167,7 +167,11 @@
     },
     doCancel: function(e) {
       if(this.hasAjax) {
-        if(this._ironRequest && !this._ironRequest.aborted) {
+        //Allow dialog to just close if
+        //There's no request yet
+        //The request has already been aborted
+        //The request has already been responed to, readyState == 4
+        if(this._ironRequest && !this._ironRequest.aborted && (this._ironRequest.xhr.readyState != 4)) {
           this._ironRequest.abort();
           return;
         }
