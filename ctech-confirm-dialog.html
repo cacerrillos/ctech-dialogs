@@ -167,7 +167,7 @@
     },
     doCancel: function(e) {
       if(this.hasAjax) {
-        if(this._ironRequest) {
+        if(this._ironRequest && !this._ironRequest.detail.request.aborted) {
           this._ironRequest.abort();
           return;
         }
